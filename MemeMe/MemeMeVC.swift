@@ -42,6 +42,8 @@ class MemeMeVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         
         // Fits the image into the view without stretching
         imagePickerView.contentMode = .scaleAspectFit
+        
+
     }
 
     @IBAction func cancelMeme(_ sender: Any) {
@@ -79,8 +81,7 @@ class MemeMeVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             if successful {
                 self.save()
                 
-                activityController.dismiss(animated: true, completion: nil)
-                self.goToTabBarController()
+                self.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -230,11 +231,6 @@ class MemeMeVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.memes.append(meme)
         
-    }
-    
-    func goToTabBarController() {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-        self.present(controller, animated: true, completion: nil)
     }
 }
 

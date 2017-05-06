@@ -10,6 +10,8 @@ import UIKit
 
 class MemeTableViewController: UITableViewController {
 
+    
+    
     var meme: [Meme] {
         get {
             let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
@@ -18,6 +20,7 @@ class MemeTableViewController: UITableViewController {
         }
     }
     
+    //var completedMeme: Meme!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -39,14 +42,40 @@ class MemeTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        let listMeme = self.meme[(indexPath as NSIndexPath).row]
+        let completedMeme = self.meme[(indexPath as NSIndexPath).row]
         
-        let topText = listMeme.topText
-        let bottomText = listMeme.bottomText
-        cell.imageView?.image = listMeme.memedImage
+        let topText = completedMeme.topText
+        let bottomText = completedMeme.bottomText
+        cell.imageView?.image = completedMeme.memedImage
         cell.textLabel?.text = "\(topText) ... \(bottomText)"
         
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let detailViewController = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
+        detailViewController.completedMeme = self.meme[indexPath.row]
+        self.navigationController!.pushViewController(detailViewController, animated: true)
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete{
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.memes.remove(at: indexPath.row)
+            self.tableView.beginUpdates()
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.endUpdates()
+            self.tableView.reloadData()
+            
+        }
+        
+    }
 }
